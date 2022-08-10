@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11"
+    "@babel/preset-env": "^7.16.11",
+    "@nomiclabs/hardhat-ganache": "^2.0.1"
   }
 }

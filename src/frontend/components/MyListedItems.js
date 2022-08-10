@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card } from 'react-bootstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 
 function renderSoldItems(items) {
   return (
@@ -67,6 +67,11 @@ export default function MyListedItems({ marketplace, nft, account }) {
       <h2>Loading...</h2>
     </main>
   )
+  const forSale = async (item) => {
+    let response = await(await nft.setApprovalForAll(marketplace.address, true)).wait();
+    console.log(response);
+  }
+
   return (
     <div className="flex justify-center">
       {listedItems.length > 0 ?
@@ -77,7 +82,11 @@ export default function MyListedItems({ marketplace, nft, account }) {
               <Col key={idx} className="overflow-hidden">
                 <Card>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                  <Card.Footer>
+                  <Button onClick={()=>forSale(item)} variant="primary" size="lg">
+                    {ethers.utils.formatEther(item.totalPrice)} CTK For Sale
+                  </Button>                  
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}

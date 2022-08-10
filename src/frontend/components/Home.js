@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 
-const Home = ({ marketplace, nft }) => {
+const Home = ({ marketplace, nft, payToken }) => {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState([])
   const loadMarketplaceItems = async () => {
@@ -11,7 +11,7 @@ const Home = ({ marketplace, nft }) => {
     let items = []
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
-      if (!item.sold) {
+      //if (!item.sold) {
         // get uri url from nft contract
         const uri = await nft.tokenURI(item.tokenId)
         // use uri to fetch the nft metadata stored on ipfs 
@@ -28,14 +28,17 @@ const Home = ({ marketplace, nft }) => {
           description: metadata.description,
           image: metadata.image
         })
-      }
+      //}
     }
     setLoading(false)
     setItems(items)
   }
 
   const buyMarketItem = async (item) => {
-    await (await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })).wait()
+    //await (await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })).wait()
+    console.log("approve coin spending for nft market plance " + marketplace.address)
+    await (await payToken.approve(marketplace.address, item.totalPrice)).wait()
+    await (await marketplace.purchaseItem(item.itemId)).wait()
     loadMarketplaceItems()
   }
 

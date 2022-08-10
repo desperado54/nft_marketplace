@@ -34,14 +34,18 @@ const Create = ({ marketplace, nft }) => {
   const mintThenList = async (result) => {
     const uri = `https://ipfs.infura.io/ipfs/${result.path}`
     // mint nft 
-    await(await nft.mint(uri)).wait()
+    let response = await(await nft.mint(uri)).wait()
+    console.log(response);
     // get tokenId of new nft 
     const id = await nft.tokenCount()
     // approve marketplace to spend nft
-    await(await nft.setApprovalForAll(marketplace.address, true)).wait()
+    response = await(await nft.setApprovalForAll(marketplace.address, true)).wait()
+    console.log(response)
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
-    await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+    response = await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+    console.log(response)
+
   }
   return (
     <div className="container-fluid mt-5">

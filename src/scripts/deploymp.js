@@ -1,24 +1,23 @@
+const CalvinTokenABI = require('../frontend/mumbai/CalvinToken.json')
+const CalvinTokenAddress = require('../frontend/mumbai/CalvinToken-address.json')
+
 async function main() {
   const [deployer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  
-  // Get the ContractFactories and Signers here.
-  const NFT = await ethers.getContractFactory("NFT");
+  const calvinToken = new ethers.Contract(CalvinTokenAddress.address, CalvinTokenABI.abi, deployer)
   const Marketplace = await ethers.getContractFactory("Marketplace");
-  // deploy contracts
-  const marketplace = await Marketplace.deploy(1);
-  const nft = await NFT.deploy();
-  // Save copies of each contracts abi and address to the frontend.
+  console.log("pay token adress="+calvinToken.address);
+  const marketplace = await Marketplace.deploy(1, calvinToken.address);
+  console.log("market place address="+marketplace.address);
   saveFrontendFiles(marketplace , "Marketplace");
-  saveFrontendFiles(nft , "NFT");
 }
 
 function saveFrontendFiles(contract, name) {
   const fs = require("fs");
-  const contractsDir = __dirname + "/../../frontend/contractsData";
+  const contractsDir = __dirname + "/../frontend/mumbai";
 
   if (!fs.existsSync(contractsDir)) {
     fs.mkdirSync(contractsDir);

@@ -8,10 +8,20 @@ import Home from './Home.js'
 import Create from './Create.js'
 import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
-import MarketplaceAbi from '../contractsData/Marketplace.json'
-import MarketplaceAddress from '../contractsData/Marketplace-address.json'
-import NFTAbi from '../contractsData/NFT.json'
-import NFTAddress from '../contractsData/NFT-address.json'
+// import MarketplaceAbi from '../contractsData/Marketplace.json'
+// import MarketplaceAddress from '../contractsData/Marketplace-address.json'
+// import PayTokenAbi from '../contractsData/CalvinToken.json'
+// import PayTokenAddress from '../contractsData/CalvinToken-address.json'
+// import NFTAbi from '../contractsData/NFT.json'
+// import NFTAddress from '../contractsData/NFT-address.json'
+
+import MarketplaceAbi from '../mumbai/Marketplace.json'
+import MarketplaceAddress from '../mumbai/Marketplace-address.json'
+import PayTokenAbi from '../mumbai/CalvinToken.json'
+import PayTokenAddress from '../mumbai/CalvinToken-address.json'
+import NFTAbi from '../mumbai/NFT.json'
+import NFTAddress from '../mumbai/NFT-address.json'
+
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Spinner } from 'react-bootstrap'
@@ -23,6 +33,7 @@ function App() {
   const [account, setAccount] = useState(null)
   const [nft, setNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
+  const [payToken, setPayToken] = useState({})
   // MetaMask Login/Connect
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -48,6 +59,10 @@ function App() {
     setMarketplace(marketplace)
     const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer)
     setNFT(nft)
+
+    const payToken = new ethers.Contract(PayTokenAddress.address, NFTAbi.abi, signer)
+    setPayToken(payToken)
+
     setLoading(false)
   }
 
@@ -66,7 +81,7 @@ function App() {
           ) : (
             <Routes>
               <Route path="/" element={
-                <Home marketplace={marketplace} nft={nft} />
+                <Home marketplace={marketplace} nft={nft} payToken={payToken}/>
               } />
               <Route path="/create" element={
                 <Create marketplace={marketplace} nft={nft} />
